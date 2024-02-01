@@ -1,3 +1,4 @@
+import 'package:blood_drive/screens/donation_screen.dart';
 import 'package:blood_drive/screens/home_screen.dart';
 import 'package:blood_drive/screens/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,21 +12,25 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   int _selectedIndex = 0;
 
   final List<Widget> _pages = [
-    HomeScreen(),
-    (),
-    ProfileScreen(),
+    const HomeScreen(),
+    const DonationScreen(),
+    const ProfileScreen(),
   ];
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Main screen'),
+        title: const Text('Main screen'),
         leading: IconButton(
           icon: Image.asset('assets/back.png'),
           onPressed: () {
@@ -33,9 +38,28 @@ class _MainScreenState extends State<MainScreen> {
           },
         ),
       ),
-      body: Container(
-        // color: Colors.red,
-        child: Center(child: Text('Welcome to my app!')),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bloodtype_outlined),
+            label: 'Donation',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        iconSize: 30.0,
+        selectedFontSize: 16.0,
+        unselectedFontSize: 12.0,
+        selectedItemColor: const Color(0xFFF1413D),
       ),
     );
   }
