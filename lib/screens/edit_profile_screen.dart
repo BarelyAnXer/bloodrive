@@ -1,0 +1,17 @@
+import 'package:flutter/cupertino.dart';
+
+class EditProfileScreen extends StatefulWidget {
+  const EditProfileScreen({super.key});
+
+  @override
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
+}
+
+class _EditProfileScreenState extends State<EditProfileScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Edit profile screen'),
+    );
+  }
+}
