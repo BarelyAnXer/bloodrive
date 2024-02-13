@@ -1,3 +1,4 @@
+import 'package:blood_drive/screens/plushare/main_screen_plusahre.dart';
 import 'package:blood_drive/screens/main_screen.dart';
 import 'package:blood_drive/screens/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -92,7 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         print('Button Login Pressed!');
 
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            // builder: (_) => const MainScreenPlushare()));
                             builder: (_) => const MainScreen()));
+                        // real one
 
                         Fluttertoast.showToast(
                           msg: "This is a toast message",

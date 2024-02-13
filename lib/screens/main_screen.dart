@@ -1,3 +1,4 @@
+import 'package:blood_drive/screens/blood_donor_donation.dart';
 import 'package:blood_drive/screens/donation_screen.dart';
 import 'package:blood_drive/screens/home_screen.dart';
 import 'package:blood_drive/screens/profile_screen.dart';
@@ -16,7 +17,8 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     const HomeScreen(),
-    const DonationScreen(),
+    // const DonationScreen(),
+    const BloodDonorDonation(),
     const ProfileScreen(),
   ];
 
