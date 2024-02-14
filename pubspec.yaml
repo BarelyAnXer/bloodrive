@@ -31,6 +31,12 @@ dependencies:
   flutter:
     sdk: flutter
   fluttertoast: ^8.2.4
+  intl: 0.18.1
+  firebase_core: ^2.25.4
+  cloud_firestore: ^4.15.4
+  firebase_auth: ^4.17.4
+  firebase_storage: ^11.6.5
+  firebase_messaging: ^14.7.15
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -40,6 +46,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -66,6 +73,7 @@ flutter:
     - assets/profile.jpg
     - assets/circle2.png
     - assets/art.jpg
+    - lib/screens/bryan/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,18 +1,22 @@
+import 'package:blood_drive/screens/donation_preparation.dart';
 import 'package:blood_drive/screens/plushare/main_screen_plusahre.dart';
 import 'package:blood_drive/screens/main_screen.dart';
 import 'package:blood_drive/screens/profile_screen.dart';
+import 'package:blood_drive/screens/signup_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+import 'bryan/registerPage1.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
 
   void _togglePasswordVisibility() {
@@ -143,6 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: OutlinedButton(
                       onPressed: () {
                         print('Button Sign Up Pressed!');
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (_) => const registerPage1()));
                       },
                       style: ButtonStyle(
                         shape: MaterialStateProperty.all(RoundedRectangleBorder(
