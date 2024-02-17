@@ -1,6 +1,9 @@
 import 'package:blood_drive/screens/edit_profile_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -10,127 +13,160 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late User? _user;
+
+  @override
+  void initState() {
+    super.initState();
+    _user = FirebaseAuth.instance.currentUser;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Image.asset(
-          'assets/logo.png',
-          width: 100,
-          // height: 100,
-        ),
-        const Text('Have a Great Day!',
-            style: TextStyle(
-              fontSize: 20.0,
-            )),
-        const SizedBox(
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularImageWithOverlay(),
-              Text("Christian Cabral Gazzingan",
+    return StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('Users')
+            .doc(_user?.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+
+          if (!snapshot.hasData || snapshot.data!.data() == null) {
+            return const Text('No data available');
+          }
+
+          final data = snapshot.data!.data()! as Map<String, dynamic>;
+          Timestamp birthDateTimestamp = data['birthDate'];
+          DateTime birthDate = birthDateTimestamp.toDate();
+          String formattedBirthDate =
+              DateFormat('yyyy-MM-dd').format(birthDate);
+
+          return Padding(
+            padding: const EdgeInsets.all(32.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Image.asset(
+                'assets/logo.png',
+                width: 100,
+                // height: 100,
+              ),
+              const Text('Have a Great Day!',
                   style: TextStyle(
                     fontSize: 20.0,
                   )),
-            ],
-          ),
-        ),
-        Card(
-          color: const Color(0xFFFFFFFF),
-          elevation: 10, // Adjust the elevation value as needed
-          shadowColor: Colors.grey, // Set the shadow color as needed
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            child: const Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+              SizedBox(
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.email),
-                    SizedBox(width: 17.0),
-                    Expanded(
-                      child: Text(
-                        'christiangazzingan38@gmail.com',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
+                    const CircularImageWithOverlay(),
+                    Text(data['firstName'] + " " + data['lastName'],
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                        )),
                   ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(Icons.cake),
-                    SizedBox(width: 17.0),
-                    Expanded(
-                      child: Text(
-                        '07/18/03',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(Icons.star),
-                    SizedBox(width: 17.0),
-                    Expanded(
-                      child: Text(
-                        'Single',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Icon(Icons.pin_drop),
-                    SizedBox(width: 17.0),
-                    Expanded(
-                      child: Text(
-                        'Block 20 Lot 19 Rosal Street Grand\nRoyale Subdivision',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            width: 120,
-            child: ElevatedButton(
-              onPressed: () {
-                print('Edit button pressed!');
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (_) => const EditProfileScreen()));
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: const Color(0xFFFFAC4D),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.edit),
-                  SizedBox(width: 8.0),
-                  Text('Edit'),
-                ],
+              Card(
+                color: const Color(0xFFFFFFFF),
+                elevation: 10, // Adjust the elevation value as needed
+                shadowColor: Colors.grey, // Set the shadow color as needed
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.email),
+                          const SizedBox(width: 17.0),
+                          Expanded(
+                            child: Text(
+                              data['email'],
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.cake),
+                          const SizedBox(width: 17.0),
+                          Expanded(
+                            child: Text(
+                              formattedBirthDate,
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.star),
+                          const SizedBox(width: 17.0),
+                          Expanded(
+                            child: Text(
+                              data['civilStatus'],
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.pin_drop),
+                          const SizedBox(width: 17.0),
+                          Expanded(
+                            child: Text(
+                              data['province'] + " " + data['municipality'],
+                              style: const TextStyle(fontSize: 16.0),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-      ]),
-    );
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  width: 120,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (_) => const EditProfileScreen()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFFFFAC4D),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.edit),
+                        SizedBox(width: 8.0),
+                        Text('Edit'),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ]),
+          );
+        });
   }
 }
 

@@ -1,12 +1,9 @@
-import 'package:blood_drive/screens/donation_preparation.dart';
-import 'package:blood_drive/screens/plushare/main_screen_plusahre.dart';
 import 'package:blood_drive/screens/main_screen.dart';
-import 'package:blood_drive/screens/profile_screen.dart';
-import 'package:blood_drive/screens/signup_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+import 'bryan/components/textboxes.dart';
 import 'bryan/registerPage1.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -17,166 +14,158 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isObscure = true;
+  TextEditingController _emailcontroller = new TextEditingController();
+  TextEditingController _passwordcontroller = new TextEditingController();
 
-  void _togglePasswordVisibility() {
-    setState(() {
-      _isObscure = !_isObscure;
-    });
+  void home(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return const MainScreen();
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Your main content goes here
-            Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset(
-                    'assets/logo.png',
-                    width: 170,
-                  ),
-                  const Text(
-                    'Welcome\nBack!',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFFF1413D),
-                      fontSize: 50.0,
-                      // height: 1,
-                    ),
-                  ),
-                  const Text(
-                    'Enter your email address and password \nto get access to your account',
-                  ),
-                  const TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      labelStyle: TextStyle(color: Color(0xFFBFBDBD)),
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: Color(0xFFBFBDBD),
-                      ),
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(
-                        Icons.lock,
-                        color: Color(0xFFBFBDBD),
-                      ), // Leading icon
-                      suffixIcon: GestureDetector(
-                        onTap: _togglePasswordVisibility,
-                        child: Icon(
-                          _isObscure ? Icons.visibility : Icons.visibility_off,
-                          color: const Color(0xFFBFBDBD),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerRight,
-                    child: const Text(
-                      'Forgot Password?',
+    return Scaffold(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Other siblings here
+                    Text(
+                      'Create\nAccount',
+                      textAlign: TextAlign.start,
                       style: TextStyle(
-                        color: Color(0xFFF1413D),
-                        fontSize: 19.0,
-                      ),
+                          fontSize: 60,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFF1413D),
+                          height: 1),
                     ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        print('Button Login Pressed!');
+                    Text(
+                        'Enter your email address and password to get access to our account')
+                  ],
+                ),
+              ),
+              // Sized box here ??
+              loginTextField(
+                controller: _emailcontroller,
+                labelText: 'Email',
+                keyboardType: TextInputType.text,
+                icon: Icons.person,
+              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.025),
 
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            // builder: (_) => const MainScreenPlushare()));
-                            builder: (_) => const MainScreen()));
-                        // real one
+              //TextField
+              loginPasswordField(
+                controller: _passwordcontroller,
+                labelText: 'Password',
+                keyboardType: TextInputType.text,
+                icon: Icons.lock,
+              ),
 
-                        Fluttertoast.showToast(
-                          msg: "This is a toast message",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.BOTTOM,
-                          // You can also use ToastGravity.TOP or ToastGravity.CENTER
-                          timeInSecForIosWeb: 1,
-                          // This parameter is ignored on Android
-                          backgroundColor: Colors.blue,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: const Color(0xFF43A0E3),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.height * 0.03),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {},
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color: Color(0xFF0062d9),
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.blue,
                         ),
                       ),
-                      child: const Text('Log In'),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: MediaQuery.of(context).size.height * 0.015),
+
+              ElevatedButton(
+                onPressed: () {
+                  FirebaseAuth.instance
+                      .signInWithEmailAndPassword(
+                    email: _emailcontroller.text,
+                    password: _passwordcontroller.text,
+                  )
+                      .then((value) {
+                    // Authentication successful, navigate to home
+                    home(context);
+                  }).catchError((error) {
+                    // Handle authentication errors
+                    print("Error: $error");
+                    // Show a snackbar or any other UI indication for invalid credentials
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Invalid credentials. Please check your email and password.",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        backgroundColor: Color(0xFF0062d9),
+                      ),
+                    );
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  minimumSize:
+                      Size(MediaQuery.of(context).size.width * 0.85, 40.0),
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                ),
+                child: Text(
+                  'Log In',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: MediaQuery.of(context).size.width * 0.045,
+                  ),
+                ),
+              ),
+
+              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account? ",
+                    style: TextStyle(
+                      color: Colors.grey,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 100.0, // Adjust the width of the left line
-                        height: 1.0,
-                        color: Colors.black,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) {
+                        return const registerPage1();
+                      }));
+                    },
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(
+                        color: Color(0xFF0062d9),
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.blue,
                       ),
-                      const SizedBox(width: 8.0), // Adjust spacing if needed
-                      const Text('or'),
-                      const SizedBox(width: 8.0), // Adjust spacing if needed
-                      Container(
-                        width: 100.0, // Adjust the width of the right line
-                        height: 1.0,
-                        color: Colors.black,
-                      ),
-                    ],
-                  ),
-                  // const SizedBox(height: 8), // Add spacing between the buttons
-                  Container(
-                    width: double.infinity,
-                    child: OutlinedButton(
-                      onPressed: () {
-                        print('Button Sign Up Pressed!');
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (_) => const registerPage1()));
-                      },
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10))),
-                        foregroundColor:
-                            MaterialStateProperty.all(const Color(0xFF43A0E3)),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.white),
-                      ),
-                      child: const Text('Sign Up'),
                     ),
                   ),
                 ],
-              ),
-            ),
-
-            // Positioned widget to place the circles image in the top right
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Image.asset(
-                'assets/circles.png',
-                width: 150,
-                height: 150,
-                // fit: BoxFit.cover,
-              ),
-            ),
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -111,24 +111,38 @@ class _registerPage1State extends State<registerPage1> {
                 ),
               ),
             ),
-            Image.asset('lib/screens/bryan/images/register_header.png',
-                width: MediaQuery.of(context).size.width),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Other siblings here
+                  Text(
+                    'Create\nAccount',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFF1413D),
+                        height: 1),
+                  ),
+                  // Other siblings here
+                ],
+              ),
+            ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   decoration: const BoxDecoration(
-                    color: Color(0xFF4da1e7),
-                    //BORDER RADIUS ON RIGHT ONLY
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    ),
-                  ),
+                      color: Color(0xFF4da1e7),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.03),
+                      horizontal: 50,
+                      vertical: MediaQuery.of(context).size.width * 0.01
+                    ),
                     child: Text(
                       'Personal Details',
                       style: TextStyle(
@@ -140,16 +154,6 @@ class _registerPage1State extends State<registerPage1> {
                   ),
                 ),
               ],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.03),
-              child: Text(
-                'Be our hero and start saving lives! Make sure to complete the form below.',
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.height * 0.020,
-                ),
-              ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Expanded(

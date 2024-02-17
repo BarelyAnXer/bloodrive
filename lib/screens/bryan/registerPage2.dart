@@ -1,6 +1,7 @@
 import 'package:blood_drive/screens/bryan/registerPage1.dart';
 import 'package:blood_drive/screens/bryan/utilities/utils.dart';
 import 'package:blood_drive/screens/home_screen.dart';
+import 'package:blood_drive/screens/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -118,7 +119,7 @@ class _registerPage2State extends State<registerPage2> {
       // Navigate to MainPage only if sign-up was successful
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => MainScreen()),
       );
     }
   }
@@ -190,7 +191,7 @@ class _registerPage2State extends State<registerPage2> {
                 child: Row(
                   children: [
                     Image.asset(
-                      'lib/images/backbutton.png',
+                      'lib/screens/bryan/images/backbutton.png',
                       height: MediaQuery.of(context).size.height * 0.03,
                     ),
                     Text(
@@ -204,26 +205,39 @@ class _registerPage2State extends State<registerPage2> {
                 ),
               ),
             ),
-            Image.asset('lib/images/register_header.png',
-                width: MediaQuery.of(context).size.width),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Other siblings here
+                  Text(
+                    'Create\nAccount',
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontSize: 60,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFF1413D),
+                        height: 1),
+                  ),
+                  // Other siblings here
+                ],
+              ),
+            ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xFF4da1e7),
-                    //BORDER RADIUS ON RIGHT ONLY
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(10),
-                      bottomRight: Radius.circular(10),
-                    ),
-                  ),
+                  decoration: const BoxDecoration(
+                      color: Color(0xFF4da1e7),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.03),
+                        horizontal: 50,
+                        vertical: MediaQuery.of(context).size.width * 0.01),
                     child: Text(
-                      'Account Details',
+                      'Personal Details',
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.0275,
                         color: Colors.white,
@@ -233,16 +247,6 @@ class _registerPage2State extends State<registerPage2> {
                   ),
                 ),
               ],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: MediaQuery.of(context).size.width * 0.03),
-              child: Text(
-                'Be our hero and start saving lives! Make sure to complete the form below.',
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.height * 0.020,
-                ),
-              ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
             Expanded(
